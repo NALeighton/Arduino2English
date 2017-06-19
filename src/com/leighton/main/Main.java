@@ -1,4 +1,4 @@
-package sample;
+package com.leighton.main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
