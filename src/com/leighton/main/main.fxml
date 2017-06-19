@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.leighton.main.Main">
+<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.leighton.main.Controller">
   <bottom>
-    <ProgressBar prefWidth="800.0" progress="0.0" />
+    <ProgressBar maxWidth="1.7976931348623157E308" prefWidth="800.0" progress="0.0" BorderPane.alignment="CENTER" />
   </bottom>
   <center>
     <VBox prefHeight="200.0" prefWidth="100.0">
@@ -36,8 +36,8 @@
         </HBox>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
           <children>
-            <TextArea editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
-            <TextArea editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
+            <TextArea fx:id="arduinoPane" editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
+            <TextArea fx:id="explanationPane" editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
           </children>
         </HBox>
       </children>
@@ -48,7 +48,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Open">
+            <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>

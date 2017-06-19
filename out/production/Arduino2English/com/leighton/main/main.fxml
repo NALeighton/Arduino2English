@@ -11,37 +11,33 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.leighton.main.Main">
+<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.leighton.main.Controller">
   <bottom>
-    <ProgressBar prefWidth="800.0" progress="0.0" />
+    <ProgressBar maxWidth="1.7976931348623157E308" prefWidth="800.0" progress="0.0" BorderPane.alignment="CENTER" />
   </bottom>
   <center>
     <VBox prefHeight="200.0" prefWidth="100.0">
       <children>
-        <HBox maxHeight="-Infinity" maxWidth="-1.0" prefHeight="23.0" prefWidth="800.0" VBox.vgrow="NEVER">
+        <HBox maxHeight="-Infinity" maxWidth="-1.0" prefHeight="23.0" prefWidth="800.0" VBox.margin="$x1" VBox.vgrow="NEVER">
           <children>
-            <Label text="Arduino Code">
+            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Label maxWidth="1.7976931348623157E308" text="Arduino Code" HBox.hgrow="ALWAYS">
               <font>
-                <Font name="System Bold" size="16.0" fx:id="x1" />
+                <Font name="System Bold" size="16.0" fx:id="x2" />
               </font>
               <HBox.margin>
-                <Insets left="150.0" />
+                <Insets fx:id="x1" />
               </HBox.margin>
             </Label>
-            <Label font="$x1" text="Explanation">
-              <HBox.margin>
-                <Insets left="300.0" />
-              </HBox.margin>
-            </Label>
+            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" HBox.margin="$x1" />
+            <Label font="$x2" maxWidth="1.7976931348623157E308" text="Explanation" HBox.hgrow="ALWAYS" HBox.margin="$x1" />
+            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
           </children>
-          <VBox.margin>
-            <Insets />
-          </VBox.margin>
         </HBox>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
           <children>
-            <TextArea editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
-            <TextArea editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
+            <TextArea fx:id="arduinoPane" editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
+            <TextArea fx:id="explanationPane" editable="false" focusTraversable="false" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
           </children>
         </HBox>
       </children>
@@ -52,7 +48,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Open">
+            <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open">
               <accelerator>
                 <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
