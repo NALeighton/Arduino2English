@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Controller {
@@ -25,12 +26,17 @@ public class Controller {
             Scanner input = new Scanner(file);
             String tmp = "";
             int i = 1;
+            ArrayList<String> code = new ArrayList<>();
             while(input.hasNext())
             {
-                tmp += (i + ":\t" + input.nextLine() + "\n");
+                String in = input.nextLine();
+                tmp += (i + ":\t" + in + "\n");
+                code.add(in);
                 i++;
             }
             arduinoPane.setText(tmp);
+            input.close();
+            explanationPane.setText(parseCode(code));
         }
     }
 
@@ -52,5 +58,39 @@ public class Controller {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String parseCode(ArrayList<String> code)
+    {
+        ArrayList<String> explanation = new ArrayList<>();
+        for(int i = 0; i < code.size(); i++)
+        {
+            if(code.get(i).contains("void"))
+            {
+                explanation.add(i,"Function: " + code.get(i).substring(code.get(i).indexOf(" "),code.get(i).indexOf("(")));
+            }
+            else if(code.get(i).contains("Serial.begin"))
+            {
+                explanation.add(i,"Serial port initialized at a baud rate of " + code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")) + "bits/sec");
+            }
+            else if(code.get(i).contains("Serial.println"))
+            {
+                explanation.add(i,code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")) + " Sent via Serial port with newline character appended");
+            }
+            else if(code.get(i).contains("//"))
+            {
+                explanation.add(i,"Comment");
+            }
+            else
+            {
+                explanation.add(i,"Things go in and things come back out... in other words, magic occurs!");
+            }
+        }
+        String tmp = "";
+        for(int i = 0; i < explanation.size(); i++)
+        {
+            tmp += i+1 + ": " + explanation.get(i) + "\n";
+        }
+        return tmp;
     }
 }
