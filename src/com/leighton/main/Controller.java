@@ -16,6 +16,8 @@ public class Controller {
     @FXML
     private TextArea explanationPane = new TextArea();
 
+    ArrayList<String> variables = new ArrayList<>();
+
     public void openFile() throws FileNotFoundException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open");
@@ -59,27 +61,133 @@ public class Controller {
             }
         }
     }
+    private boolean variable(String in)
+    {
+        boolean tmp = false;
+        if(variables.size() > 0)
+        {
+            for(int i = 0; i < variables.size(); i++)
+            {
+                if(in.startsWith(variables.get(i)))
+                {
+                    tmp = true;
+                }
+            }
+        }
+        return tmp;
+    }
 
     private String parseCode(ArrayList<String> code)
     {
         ArrayList<String> explanation = new ArrayList<>();
+        boolean blockComment = false;
         for(int i = 0; i < code.size(); i++)
         {
-            if(code.get(i).contains("void"))
+            System.out.println(i); //debug
+            code.set(i,code.get(i).trim());
+            if(code.get(i).startsWith("*/"))
             {
-                explanation.add(i,"Function: " + code.get(i).substring(code.get(i).indexOf(" "),code.get(i).indexOf("(")));
+                explanation.add(i,"Block comment end");
+                blockComment = false;
             }
-            else if(code.get(i).contains("Serial.begin"))
+            else if(blockComment)
+            {
+                explanation.add(i,"comment content");
+            }
+            else if(code.get(i).startsWith("void"))
+            {
+                explanation.add(i,"Function: " + code.get(i).substring(code.get(i).indexOf(" "),code.get(i).indexOf("(")) + " with parameters: " + code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")));
+            }
+            else if(code.get(i).startsWith("for"))
+            {
+                explanation.add(i,"For loop");
+            }
+            else if(code.get(i).startsWith("Serial.begin"))
             {
                 explanation.add(i,"Serial port initialized at a baud rate of " + code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")) + "bits/sec");
             }
-            else if(code.get(i).contains("Serial.println"))
+            else if(code.get(i).startsWith("Serial.println"))
             {
                 explanation.add(i,code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")) + " Sent via Serial port with newline character appended");
             }
-            else if(code.get(i).contains("//"))
+            else if(code.get(i).startsWith("Serial.print"))
+            {
+                explanation.add(i,code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")) + " Sent via Serial port without newline character appended");
+            }
+            else if(code.get(i).startsWith("//"))
             {
                 explanation.add(i,"Comment");
+            }
+            else if(code.get(i).startsWith("/*"))
+            {
+                explanation.add(i,"Block comment begin");
+                blockComment = true;
+            }
+            else if(code.get(i).startsWith("const int"))
+            {
+                explanation.add(i,"Constant Integer variable: " + code.get(i).substring(code.get(i).indexOf(" ",code.get(i).indexOf(" ")+4),code.get(i).indexOf(" ",code.get(i).indexOf(" ")+5)) + " initialized");
+                variables.add(code.get(i).substring(code.get(i).indexOf(" ",code.get(i).indexOf(" ")+4),code.get(i).indexOf(" ",code.get(i).indexOf(" ")+5)));
+            }
+            else if(code.get(i).startsWith("int"))
+            {
+                explanation.add(i,"Integer variable: " + code.get(i).substring(code.get(i).indexOf(" ")+1,code.get(i).indexOf(" ",code.get(i).indexOf(" ")+1)) + " initialized");
+                variables.add(code.get(i).substring(code.get(i).indexOf(" ")+1,code.get(i).indexOf(" ",code.get(i).indexOf(" ")+1)));
+            }
+            else if(code.get(i).startsWith("const bool"))
+            {
+                explanation.add(i,"Constant Boolean variable: " + code.get(i).substring(code.get(i).indexOf(" ",code.get(i).indexOf(" ")+4),code.get(i).indexOf(" ",code.get(i).indexOf(" ")+5)) + " initialized");
+                variables.add(code.get(i).substring(code.get(i).indexOf(" ",code.get(i).indexOf(" ")+4),code.get(i).indexOf(" ",code.get(i).indexOf(" ")+5)));
+            }
+            else if(code.get(i).startsWith("bool"))
+            {
+                explanation.add(i,"Boolean variable: " + code.get(i).substring(code.get(i).indexOf(" ")+1,code.get(i).indexOf(" ",code.get(i).indexOf(" ")+1)) + " initialized");
+                variables.add(code.get(i).substring(code.get(i).indexOf(" ")+1,code.get(i).indexOf(" ",code.get(i).indexOf(" ")+1)));
+            }
+            else if(code.get(i).startsWith("const String"))
+            {
+                explanation.add(i,"Constant String variable: " + code.get(i).substring(code.get(i).indexOf(" ",code.get(i).indexOf(" ")+4),code.get(i).indexOf(" ",code.get(i).indexOf(" ")+5)) + " initialized");
+                variables.add(code.get(i).substring(code.get(i).indexOf(" ",code.get(i).indexOf(" ")+4),code.get(i).indexOf(" ",code.get(i).indexOf(" ")+5)));
+            }
+            else if(code.get(i).startsWith("String"))
+            {
+                explanation.add(i,"Boolean variable: " + code.get(i).substring(code.get(i).indexOf(" ")+1,code.get(i).indexOf(" ",code.get(i).indexOf(" ")+1)) + " initialized");
+                variables.add(code.get(i).substring(code.get(i).indexOf(" ")+1,code.get(i).indexOf(" ",code.get(i).indexOf(" ")+1)));
+            }
+            else if(variable(code.get(i)))
+            {
+                explanation.add(i,"Variable: " + code.get(i).substring(0, code.get(i).indexOf(" ")) + " updated");
+            }
+            else if(code.get(i).startsWith("pinMode"))
+            {
+                explanation.add(i,"Pin: " + code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(",")) + " has been set to: " + code.get(i).substring(code.get(i).indexOf(",")+1,code.get(i).indexOf(")")));
+            }
+            else if(code.get(i).startsWith("delay"))
+            {
+                explanation.add(i, "Processor waits for: " + code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(")")) + " milliseconds");
+            }
+            else if(code.get(i).startsWith("analogWrite") || code.get(i).startsWith("digitalWrite"))
+            {
+                explanation.add(i, "Pin: " + code.get(i).substring(code.get(i).indexOf("(")+1,code.get(i).indexOf(",")) + " set to: " + code.get(i).substring(code.get(i).indexOf(",")+1,code.get(i).indexOf(")")));
+            }
+            else if(code.get(i).startsWith("analogWrite"))
+            {
+                explanation.add(i, "Analog value read from pin: " + code.get(i).substring(code.get(i).indexOf("(")+1, code.get(i).indexOf(")")));
+            }
+            else if(code.get(i).startsWith("digitalWrite"))
+            {
+                explanation.add(i, "Digital value read from pin: " + code.get(i).substring(code.get(i).indexOf("(")+1, code.get(i).indexOf(")")));
+            }
+            else if(code.get(i).startsWith("{"))
+            {
+                explanation.add(i, "Something starts");
+            }
+            else if(code.get(i).startsWith("}"))
+            {
+                explanation.add(i, "Something ends");
+            }
+            else if(code.get(i).isEmpty())
+            {
+                explanation.add(i," ");
             }
             else
             {

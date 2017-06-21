@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.leighton.main.Controller">
+<BorderPane fx:id="rootPane" disable="false" prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.leighton.main.Controller">
   <bottom>
     <ProgressBar maxWidth="1.7976931348623157E308" prefWidth="800.0" progress="0.0" BorderPane.alignment="CENTER" />
   </bottom>
@@ -44,7 +45,7 @@
     </VBox>
   </center>
   <top>
-    <MenuBar>
+    <MenuBar id="menuBar">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
